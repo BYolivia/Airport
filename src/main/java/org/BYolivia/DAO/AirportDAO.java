@@ -1,13 +1,16 @@
 package org.BYolivia.DAO;
 
 import jakarta.persistence.TypedQuery;
+import org.BYolivia.entities.AirplaneType;
 import org.BYolivia.entities.Airport;
 import org.BYolivia.DAO.util.HibernateSessionFactory;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.List;
+import java.util.Set;
 
 public class AirportDAO {
 
@@ -20,7 +23,7 @@ public class AirportDAO {
 
         Session session = HibernateSessionFactory.getSessionSingleton();
         try {
-            TypedQuery<Airport> query = session.createNativeQuery("select * FROM EMPLOYEE", Airport.class);
+            TypedQuery<Airport> query = session.createNativeQuery("select * FROM Airport", Airport.class);
             List<Airport> airports = query.getResultList();
             return airports;
         } catch (HibernateException e) {
@@ -87,6 +90,20 @@ public class AirportDAO {
         try {
             Airport airport = session.get(Airport.class, id);
             return airport;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public  List<Airport> findAllWithAirplanes() {
+        Session session = HibernateSessionFactory.getSessionSingleton();
+        try {
+            List<Airport> airports = session.createQuery("FROM Airport", Airport.class).getResultList();
+            for (Airport airport : airports) {
+                Hibernate.initialize(airport.getAirplanes());
+            }
+            return airports;
         } catch (HibernateException e) {
             e.printStackTrace();
             return null;

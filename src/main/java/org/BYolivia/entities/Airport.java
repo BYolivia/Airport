@@ -7,11 +7,15 @@ import java.util.Set;
 @Entity
 @Table(name = "AIRPORT")
 public class Airport {
+    public Airport(Integer capacity) {
+        this.capacity = capacity;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column (name = "capacity")
-    private Integer capacity;
+    private final Integer capacity;
 
     @ManyToMany
     @JoinTable(
@@ -23,6 +27,8 @@ public class Airport {
 
     @OneToMany(mappedBy = "fk_airport",cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Airplane> airplanes;
+
+
 
 
     public Integer getId() {
