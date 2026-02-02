@@ -7,6 +7,8 @@ import java.util.Set;
 @Entity
 @Table(name = "AIRPORT")
 public class Airport {
+    public Airport(){}
+
     public Airport(Integer capacity) {
         this.capacity = capacity;
     }
@@ -14,8 +16,9 @@ public class Airport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column (name = "capacity")
-    private final Integer capacity;
+    private Integer capacity;
 
     @ManyToMany
     @JoinTable(
@@ -28,7 +31,9 @@ public class Airport {
     @OneToMany(mappedBy = "fk_airport",cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Airplane> airplanes;
 
-
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
+    }
 
 
     public Integer getId() {
@@ -43,9 +48,6 @@ public class Airport {
         return capacity;
     }
 
-    public void setCapacity(Integer capacity) {
-        this.capacity = capacity;
-    }
 
     public Set<Airport> getNeighbour() {
         return neighbour;

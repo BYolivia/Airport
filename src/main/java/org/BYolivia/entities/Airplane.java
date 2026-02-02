@@ -7,6 +7,18 @@ import java.util.Objects;
 @Entity
 @Table(name = "AIRPLANE")
 public class Airplane {
+
+    public Airplane() {
+    }
+    public Airplane(AirplaneType fk_airplanetype, Airport fk_airport) {
+        this.fk_airplanetype = fk_airplanetype;
+        this.fk_airport = fk_airport;
+    }
+    public Airplane(Airport fk_airport, AirplaneType fk_airplanetype) {
+        this.fk_airport = fk_airport;
+        this.fk_airplanetype = fk_airplanetype;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "regno")
