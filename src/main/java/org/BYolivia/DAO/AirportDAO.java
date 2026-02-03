@@ -23,7 +23,7 @@ public class AirportDAO {
 
         Session session = HibernateSessionFactory.getSessionSingleton();
         try {
-            TypedQuery<Airport> query = session.createNativeQuery("select * FROM Airport", Airport.class);
+            TypedQuery<Airport> query = session.createNativeQuery("select * FROM AIRPORT", Airport.class);
             List<Airport> airports = query.getResultList();
             return airports;
         } catch (HibernateException e) {
@@ -66,13 +66,34 @@ public class AirportDAO {
         }
     }
 
+    public void update(Airport airport) {
+        Session session = HibernateSessionFactory.getSessionSingleton();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.merge(airport);
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null)
+                tx.rollback();
+            e.printStackTrace();
+        }
+    }
+
     public void deleteAll(){
         Session session = HibernateSessionFactory.getSessionSingleton();
         Transaction tx = null;
 
         try {
+            session.clear();
             tx = session.beginTransaction();
-            List<Airport> airports = loadAirports();
+            List<Airport> airports = session.createQuery("FROM Airport", Airport.class).getResultList();
+            for (Airport airport : airports) {
+                Hibernate.initialize(airport.getAirplanes());
+                Hibernate.initialize(airport.getNeighbour());
+                airport.getNeighbour().clear();
+            }
+            session.flush();
             for (Airport airport : airports) {
                 session.remove(airport);
             }

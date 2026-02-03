@@ -2,6 +2,7 @@ package org.BYolivia.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -70,5 +71,31 @@ public class AirplaneType {
             return id.hashCode();
         }
         return (name == null && size == null) ? 0 : Objects.hash(name, size);
+    }
+
+    @Override
+    public String toString() {
+        return "AirplaneType{id=" + id + ", name='" + name + "', size=" + size + '}';
+    }
+
+    public static String toTable(List<AirplaneType> types) {
+        String[] headers = {"ID", "Name", "Size"};
+        int[] widths = {headers[0].length(), headers[1].length(), headers[2].length()};
+        for (AirplaneType t : types) {
+            widths[0] = Math.max(widths[0], String.valueOf(t.id).length());
+            widths[1] = Math.max(widths[1], (t.name != null ? t.name : "null").length());
+            widths[2] = Math.max(widths[2], String.valueOf(t.size).length());
+        }
+        String format = "| %-" + widths[0] + "s | %-" + widths[1] + "s | %-" + widths[2] + "s |%n";
+        String separator = "+" + "-".repeat(widths[0] + 2) + "+" + "-".repeat(widths[1] + 2) + "+" + "-".repeat(widths[2] + 2) + "+";
+        StringBuilder sb = new StringBuilder();
+        sb.append(separator).append("\n");
+        sb.append(String.format(format, headers[0], headers[1], headers[2]));
+        sb.append(separator).append("\n");
+        for (AirplaneType t : types) {
+            sb.append(String.format(format, t.id, t.name, t.size));
+        }
+        sb.append(separator);
+        return sb.toString();
     }
 }

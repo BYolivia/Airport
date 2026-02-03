@@ -27,7 +27,7 @@ public class AirplaneDAO {
 
         Session session = HibernateSessionFactory.getSessionSingleton();
         try {
-            TypedQuery<Airplane> query = session.createNativeQuery("select * FROM Airplane", Airplane.class);
+            TypedQuery<Airplane> query = session.createNativeQuery("select * FROM AIRPLANE", Airplane.class);
             List<Airplane> airplanes = query.getResultList();
             return airplanes;
         } catch (HibernateException e) {
@@ -105,8 +105,8 @@ public class AirplaneDAO {
         try {
             List<Airplane> airplanes = session.createQuery("FROM Airplane", Airplane.class).getResultList();
             for (Airplane airplane : airplanes) {
-                Hibernate.initialize(airplane.getFk_airplanetype());
-                Hibernate.initialize(airplane.getFk_airport());
+                Hibernate.initialize(airplane.getAirplaneType());
+                Hibernate.initialize(airplane.getAirport());
             }
             return airplanes;
         } catch (HibernateException e) {
